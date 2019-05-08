@@ -1,0 +1,30 @@
+{% extends 'Jukebox/base.html' %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+
+        </div>
+        <div class="col-6">
+            {% if message %}
+            <div class="alert alert-success text-center mt-5" role="alert">
+              {{message}}
+            </div>
+            {% endif %}
+             <form method="post">
+            <div class="card mt-5">
+                <div class="card-header">Contact</div>
+                {% csrf_token %}
+                <input class="form-control form-control-lg" placeholder="Email (optional)" type="email" name="email">
+                <input required class="form-control form-control-lg" placeholder="Subject" type="text" name="subject">
+                <textarea required placeholder="Message" class="form-control" rows="8" cols="50" name="content" style="font-size:small"></textarea>
+            </div>
+                 <button class="btn btn-danger btn-lg btn-block" type="submit">Send</button>
+                 </form>
+        </div>
+        <div class="col-3">
+
+        </div>
+    </div>
+</div>
+{% endblock %}

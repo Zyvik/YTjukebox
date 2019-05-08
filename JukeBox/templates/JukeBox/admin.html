@@ -1,0 +1,125 @@
+{% extends 'Jukebox/base.html' %}
+{% block body %}
+
+<!-- Welcome message -->
+<div class="container">
+    {% if error %}
+    {% autoescape off %}
+    <div class="row mt-4">
+        <div class="col">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              {{error}}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+        </div>
+    </div>
+    {% endautoescape %}
+    {% endif %}
+    <div class="row">
+        <div class="col">
+            <h1>Welcome in your control room!</h1>
+            <h3>This site is divided into two sections:</h3>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">On the left you can add, play and delete YouTube videos from the list.</li>
+                <li class="list-group-item">On the right you can control the player.</li>
+                <li class="list-group-item">In order to listen to the jukebox you have to open listener's room.</li>
+
+            </ul>
+        </div>
+        <div class="col">
+            <div class="card mt-5">
+                <div class="card-header">Links</div>
+                <div class="card-body">
+                    <h4>Control room link:</h4>
+                    <input class="form-control form-control-lg mb-4" type="text" value="https://zyv1k.eu.pythonanywhere.com{% url 'jb:manage' room.pk %}">
+                    <h4>Link for listeners:</h4>
+                    <input class="form-control form-control-lg " type="text" value="https://zyv1k.eu.pythonanywhere.com{% url 'jb:listen' room.slug %}">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <!-- Add / delete / play videos -->
+        <div class="col">
+            <form method="post">
+                {% csrf_token %}
+            <h3>Add videos:</h3>
+            <input type="text" class="form-control form-control-lg" placeholder="Video's name (only you can see it)" name="video_name" maxlength="25" required>
+            <input type="text" class="form-control form-control-lg" placeholder="YouTube Video ID" name="video_url" maxlength="11" minlength="11" required>
+            <button class="btn btn-lg btn-danger btn-block" type="submit" name="add_video_button" value="True"><span class="glyphicon glyphicon-plus" aria-hidden="true"> </span> Add video</button>
+            </form>
+            <h3 class="mt-4 mb-4">Your videos:</h3>
+            <form method="post">
+                {% csrf_token %}
+            <ul class="list-group list-group-flush mb-4">
+                {% if room_videos %}
+            {% for video in room_videos %}
+              <li class="list-group-item">
+                  <div class="row">
+                  <div class="col-9">
+                      <button type="submit" name="delete" class="btn btn-danger" value="{{video.pk}}"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                      <span style="overflow:hidden;"> {{video.name}}</span>
+                  </div>
+                  <div class="col-3 d-flex justify-content-center">
+                      <button type="submit" name="video" class="btn btn-danger" value="{{video.pk}}"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></button>
+                  </div>
+                  </div>
+              </li>
+            {% endfor %}
+            </ul>
+                {% else %}
+                <h4 class="mb-3">You don't have any videos yet.</h4><br>
+                <h4>If you don't know what Video ID is check <a target="_blank" href="https://gist.github.com/jakebellacera/d81bbf12b99448188f183141e6696817">this</a> guide.</h4><br>
+                <h4>Alternatively you can use those two: dQw4w9WgXcQ, djV11Xbc914.</h4>
+
+                {% endif %}
+            </form>
+        </div>
+        <!-- controls -->
+        <div class="col">
+            <form method="post">
+                {% csrf_token %}
+                <h3>Controls:</h3><br>
+                {% if state.paused %}
+                <h3 class="d-flex justify-content-center text-danger">Currently: paused - {{state.video.name}}</h3>
+                {% else %}
+                <h3 class="d-flex justify-content-center text-danger">Currently: playing - {{state.video.name}}</h3>
+                {% endif %}
+                <div class="row mt-4">
+                    <div class="col"></div>
+                    <div class="col d-flex justify-content-center">
+                        {% if state.paused %}
+                        <button class="btn btn-lg btn-danger btn-block" name="status" value="play" type="submit" style="font-size:xx-large;">
+                            <span class="glyphicon glyphicon-play"></span>
+                        </button>
+                        {% else %}
+                        <button class="btn btn-lg btn-danger btn-block" name="status" value="pause" type="submit" style="font-size:xx-large;">
+                            <span class="glyphicon glyphicon-pause"></span>
+                        </button>
+                        {% endif %}
+                    </div>
+                    <div class="col"></div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col">
+                        <input type="time" class="form-control form-control-lg" step="1" name="time_value" min="00:00:00" value="00:00:00" required>
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-lg btn-block btn-danger" name="time" value="true">
+                            <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
+                            <span> / </span>
+                            <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

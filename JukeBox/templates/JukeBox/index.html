@@ -1,0 +1,78 @@
+{% extends 'JukeBox/base.html' %}
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+{% block body %}
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col">
+                {% if user.is_authenticated %}
+                <p><h1>{{user}}, welcome to YTjukebox!</h1></p>
+                {% else %}
+                <p><h1>Welcome to YTjukebox!</h1></p>
+                {% endif %}
+                <p class="pt-3"><h3>This site allows you to create room and control YouTube players of everyone inside that room.</h3></p>
+                <p><h4>You control jukebox (YouTube player) in the room - hence the name YTjukebox.</h4></p>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col">
+                <h3>How does it work?</h3>
+                <ul class="list-group list-group-flush mt-4">
+                    <li class="list-group-item"><h4>First, you need to create room using form below. (Logging-in isn't necessary, but greatly increases security of said room.)</h4></li>
+                    <li class="list-group-item"><h4>Upon successful creation you will be redirected to your control room and given two links - one for yourself, and one for your listeners (aka everyone else).</h4></li>
+                    <li class="list-group-item"><h4>Then you can add your videos of choice and play them to everyone who has listener site opened in their browser.</h4></li>
+                    <li class="list-group-item"><h4>You can play, pause, change the video, and skip to specific part of it.</h4></li>
+                </ul>
+            </div>
+            {% if user.is_authenticated %}
+            <div class="col">
+                <h3>Claim existing room:</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <input required name="claim_room_id" type="text" class="form-control form-control-lg" placeholder="Room's ID">
+                    <button name="claim_room" type="submit" class="btn btn-lg btn-danger btn-block" value="true">Claim room</button>
+                </form>
+                    <h3 class="mt-4">Your rooms:</h3>
+                    <div class="list-group">
+                        {% if user_rooms %}
+                        {% for room in user_rooms %}
+                        <a class="list-group-item list-group-item-action" href="{% url 'jb:manage' room.pk %}">{{room.name}}</a>
+                        {% endfor %}
+                        {% else %}
+                        <h4>You don't have any rooms - create one.</h4>
+                        {% endif %}
+                    </div>
+            </div>
+            {% endif %}
+        </div>
+        <!-- CREATE ROOM FORM -->
+        <div class="row pt-5 pb-3">
+            <div class="col-3"></div>
+            <div class="col-6">
+                <h1></h1>
+                <form method="post">
+                    {% csrf_token %}
+                    <input class="form-control form-control-lg" type="text" name="name" id="Name" maxlength="50" minlength="3" placeholder="Room's name" style="font-size:large;" required>
+                    {% if error %}
+                    <div class="invalid-feedback" style="display:block;">
+                        <h5>{{error}}</h5>
+                    </div>
+                      {% endif %}
+                    <button class="btn btn-lg btn-block btn-danger mt-3" type="submit" style="font-size:large;" name="create_room" value="true">Create a room!</button>
+                </form>
+            </div>
+            <div class="col-3"></div>
+        </div>
+        <div class="row mt-5">
+            <div class="col">
+                <p><h3>Why would I use it?</h3></p>
+                <p><h4>I don't know... I, personally, use it to set background music during my online tabletop RPG's sessions.</h4></p>
+                <p><h5>(Are those still 'tabletop' if there is no table involved?)</h5></p>
+            </div>
+        </div>
+
+
+    </div>
+{% endblock %}

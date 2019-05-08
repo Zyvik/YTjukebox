@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark navbar-expand-sm bg-danger">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'jb:index' %}" style="font-size:large;"><span class="glyphicon glyphicon-play" aria-hidden="true"></span><span class="glyphicon glyphicon-pause" aria-hidden="true"></span> YTjukebox</a>
+            {% if not user.is_authenticated %}
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item mr-3">
+                    <a class="nav-link text-light" style="font-size:medium;" href="{% url 'jb:contact' %}">Contact me</a>
+                </li>
+                <li class="nav-item-active">
+                    <a class="nav-link text-light" href="{% url 'jb:login' %}" style="font-size:medium">Log in</a>
+                </li>
+            </ul>
+        {% else %}
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item mr-3">
+                <a class="nav-link text-light" style="font-size:medium;" href="{% url 'jb:contact' %}">Contact me</a>
+            </li>
+            <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle text-light" href="#" id="navbardrop" data-toggle="dropdown" style="font-size:medium">
+                          <span class="glyphicon glyphicon-user"></span>
+                          {{user.username}}
+                      </a>
+                      <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{% url 'jb:logout' %}" style="font-size:medium">
+                                <span class="glyphicon glyphicon-off"></span> Log out
+                            </a>
+                      </div>
+                </li>
+        </ul>
+        {% endif %}
+        </div>
+    </nav>
+    <!-- body -->
+{% block body %}
+{% endblock %}
+</body>
+</html>

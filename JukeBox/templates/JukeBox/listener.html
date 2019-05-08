@@ -1,0 +1,52 @@
+{% extends 'JukeBox/base.html' %}
+
+{% load static %}
+{% block body %}
+<div class="container">
+  <div class="row mt-4">
+    <div class="col">
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  Some modern browsers block auto-play function. If that's the case for you, then in order to use this site you have to manually start the very first video.
+
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+  </div>
+</div>
+  <div class="row">
+    <div class="col d-flex justify-content-center">
+      <p><h1>{{room.name}}</h1></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col d-flex justify-content-center">
+      <p>
+        <h3>
+          Currently -
+          <span id="Status"></span>
+        </h3>
+      </p>
+    </div>
+  </div>
+
+  <!-- YouTube Player -->
+  <div class="row mt-5">
+    <div class="col d-flex justify-content-center">
+      <div id="player"></div>
+    </div>
+  </div>
+
+  <!-- disconnect button -->
+  <div class="row mt-5">
+    <div class="col"></div>
+    <div class="col">
+      <button id="btn_disconnect" class="btn btn-lg btn-outline-danger btn-block" style="font-size:x-large;"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Disconnect</button>
+      <h5 id="Disconnected" class="mt-4"></h5>
+    </div>
+    <div class="col"></div>
+  </div>
+</div>
+
+<script src="{% static 'JukeBox/script.js' %}"></script>
+{% endblock %}
